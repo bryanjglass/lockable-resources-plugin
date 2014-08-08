@@ -37,7 +37,7 @@ function unreserve_resource_${i}() {
 </script>
 					<tr>
 						<td class="pane">
-							<strong>${resource.name}</strong><br/>
+							<strong>${resource.name}</strong> (${resource.tags})<br/>
 							<em>${resource.description}</em>
 						</td>
 <j:if test="${resource.locked}">

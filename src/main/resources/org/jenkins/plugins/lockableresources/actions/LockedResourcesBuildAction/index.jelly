@@ -25,7 +25,7 @@
 			<ul>
 <j:forEach var="resource" items="${it.lockedResources}" varStatus="loop">
 				<li>
-					<strong>${resource.name}</strong> - <em>${resource.description}</em>
+					<strong>${resource.name}</strong> (${resource.tags}) - <em>${resource.description}</em>
 				</li>
 </j:forEach>
 			</ul>

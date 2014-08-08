@@ -30,14 +30,17 @@ public class RequiredResourcesProperty extends JobProperty<Job<?, ?>> {
 	private final String resourceNames;
 	private final String resourceNamesVar;
 	private final String resourceNumber;
+    private final String tagNames;
 
 	@DataBoundConstructor
 	public RequiredResourcesProperty(String resourceNames,
-			String resourceNamesVar, String resourceNumber) {
+			String resourceNamesVar, String resourceNumber,
+            String tagNames) {
 		super();
 		this.resourceNames = resourceNames;
 		this.resourceNamesVar = resourceNamesVar;
 		this.resourceNumber = resourceNumber;
+        this.tagNames = tagNames;
 	}
 
 	public String[] getResources() {
@@ -59,6 +62,18 @@ public class RequiredResourcesProperty extends JobProperty<Job<?, ?>> {
 	public String getResourceNumber() {
 		return resourceNumber;
 	}
+
+    public String getTagNames() {
+        return tagNames;
+    }
+
+    public String[] getTags() {
+        String names = Util.fixEmptyAndTrim(tagNames);
+        if (names != null)
+            return names.split("\\s+");
+        else
+            return new String[0];
+    }
 
 	@Extension
 	public static class DescriptorImpl extends JobPropertyDescriptor {
@@ -89,11 +104,14 @@ public class RequiredResourcesProperty extends JobProperty<Job<?, ?>> {
 			String resourceNumber = Util.fixEmptyAndTrim(json
 					.getString("resourceNumber"));
 
-			if (resourceNames == null)
-				return null;
+            String tagNames = Util.fixEmptyAndTrim(json
+                    .getString("tagNames"));
+
+            if (resourceNames == null && tagNames == null)
+                return null;
 
 			return new RequiredResourcesProperty(resourceNames,
-					resourceNamesVar, resourceNumber);
+					resourceNamesVar, resourceNumber, tagNames);
 		}
 
 		public FormValidation doCheckResourceNames(@QueryParameter String value) {
@@ -165,6 +183,25 @@ public class RequiredResourcesProperty extends JobProperty<Job<?, ?>> {
 
 			return c;
 		}
+
+        public AutoCompletionCandidates doAutoCompleteTagNames(
+                @QueryParameter String value) {
+            AutoCompletionCandidates c = new AutoCompletionCandidates();
+
+            value = Util.fixEmptyAndTrim(value);
+
+            if (value != null) {
+                for (LockableResource r : LockableResourcesManager.get()
+                        .getResources()) {
+                    for (String t : r.getTagNames()) {
+                        if (t.startsWith(value))
+                            c.add(t);
+                    }
+                }
+            }
+
+            return c;
+        }
 	}
 }
 

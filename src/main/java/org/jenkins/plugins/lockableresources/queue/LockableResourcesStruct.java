@@ -29,6 +29,9 @@ public class LockableResourcesStruct {
 				this.required.add(r);
 			}
 		}
+        for (String tag : property.getTags()) {
+            this.required.addAll(LockableResourcesManager.get().fromTag(tag));
+        }
 		this.requiredVar = property.getResourceNamesVar();
 		if (this.requiredVar != null && this.requiredVar.equals("")) {
 			this.requiredVar = null;

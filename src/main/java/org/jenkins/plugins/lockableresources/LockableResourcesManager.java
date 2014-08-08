@@ -11,8 +11,7 @@ package org.jenkins.plugins.lockableresources;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
@@ -79,6 +78,18 @@ public class LockableResourcesManager extends GlobalConfiguration {
 		return null;
 	}
 
+    public Set<LockableResource> fromTag(String tagName) {
+        Set<LockableResource> found = new HashSet<LockableResource>();
+
+        if (tagName != null) {
+            for (LockableResource r : resources) {
+                if(Arrays.asList(r.getTagNames()).contains(tagName))
+                    found.add(r);
+            }
+        }
+
+        return found;
+    }
 	public synchronized boolean queue(List<LockableResource> resources,
 			int queueItemId) {
 		for (LockableResource r : resources)

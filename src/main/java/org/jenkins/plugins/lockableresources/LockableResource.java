@@ -26,16 +26,18 @@ public class LockableResource extends AbstractDescribableImpl<LockableResource> 
 	private final String name;
 	private final String description;
 	private String reservedBy;
+    private final String tags;
 
 	private transient int queueItemId = NOT_QUEUED;
 	private transient String queueItemProject = null;
 	private transient AbstractBuild<?, ?> build = null;
 
 	@DataBoundConstructor
-	public LockableResource(String name, String description, String reservedBy) {
+	public LockableResource(String name, String description, String reservedBy, String tags) {
 		this.name = name;
 		this.description = description;
 		this.reservedBy = Util.fixEmptyAndTrim(reservedBy);
+        this.tags = tags;
 	}
 
 	public String getName() {
@@ -49,6 +51,14 @@ public class LockableResource extends AbstractDescribableImpl<LockableResource> 
 	public String getReservedBy() {
 		return reservedBy;
 	}
+
+    public String getTags() {
+        return tags;
+    }
+
+    public String[] getTagNames() {
+        return tags.split(" ");
+    }
 
 	public boolean isReserved() {
 		return reservedBy != null;
